@@ -8,6 +8,7 @@ use GitContent\Services\Github;
 use Herbert\Framework\Notifier;
 use Parsedown;
 use ParsedownExtra;
+use GitContent\MetaBoxes\ParsedownExtraPlugin;
 
 /**
  * Class ExtendPublish.
@@ -140,9 +141,13 @@ class ExtendPublish
         **/
         remove_action('save_post', [$this, 'save']);
 
+
+        $Parsedown = new ParsedownExtraPlugin();
+        $Parsedown->tableAttributes = ['class'=>'table-default'];
+
         wp_update_post([
             'ID' => $postID,
-            'post_content' => (new ParsedownExtra)->text(file_get_contents($markdownFile))
+            'post_content' => $Parsedown->text(file_get_contents($markdownFile))
         ], false);
 
         add_action('save_post', [$this, 'save']);
