@@ -50,21 +50,28 @@ class ExtendPublish
         $this->nonce = 'gitcontent_file_nonce';
         $this->metaKey = '_gitcontent_file';
 
-        add_action('post_submitbox_misc_actions', [$this, 'add']);
+        add_action( 'add_meta_boxes_page', [$this, 'add_meta_boxes'] );
+//        add_action('post_submitbox_misc_actions', [$this, 'add']);
         add_action('save_post', [$this, 'save']);
     }
 
+    public function add_meta_boxes() {
+
+        add_meta_box(
+            'global-notice',
+            'Git Content',
+            [$this, 'add'],
+            null,
+            'side'
+        );
+
+    }
     /**
      * Gets post and fetches template.
      */
     public function add()
     {
         $post = $this->getPost();
-
-        if ($post->post_type !== 'post') {
-            return;
-        }
-
         $this->template($post);
     }
 
